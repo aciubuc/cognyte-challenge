@@ -1,7 +1,7 @@
-package com.cognyte.challenge.controller;
+package com.cognyte.challenge.rest;
 
 import com.cognyte.challenge.model.Residence;
-import com.cognyte.challenge.repository.ResidenceRepository;
+import com.cognyte.challenge.service.ResidenceService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,41 +12,41 @@ import java.util.List;
 @RestController
 @RequestMapping("/residences")
 public class ResidencesController {
-    private final ResidenceRepository residenceRepository;
+    private ResidenceService residenceService;
 
-    public ResidencesController(ResidenceRepository residenceRepository) {
-        this.residenceRepository = residenceRepository;
+    public ResidencesController(ResidenceService residenceService) {
+        this.residenceService = residenceService;
     }
     @GetMapping
     public List<Residence> getResidences() {
-        return residenceRepository.findAll();
+        return residenceService.findAll();
     }
     @GetMapping("/{id}")
     public Residence getResidence(@PathVariable Integer id) {
-        return residenceRepository.findById(id).orElseThrow(RuntimeException::new);
+        return residenceService.findById(id);
     }
 
     @PostMapping
     public ResponseEntity createResidence(@RequestBody Residence residence) throws URISyntaxException {
-        Residence existingResidence = residenceRepository.save(residence);
+        Residence existingResidence = residenceService.save(residence);
         return ResponseEntity.created(new URI("/residences/" + existingResidence.getId())).body(existingResidence);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity updateResidence(@PathVariable Integer id, @RequestBody Residence residence) {
-        Residence existingResidence = residenceRepository.findById(id).orElseThrow(RuntimeException::new);
+        Residence existingResidence = residenceService.findById(id);
         existingResidence.setZipCode(residence.getZipCode());
         existingResidence.setNumber(residence.getNumber());
         existingResidence.setLatitude(residence.getLatitude());
         existingResidence.setLongitude(residence.getLongitude());
         existingResidence.setResidentsNumber(residence.getResidentsNumber());
-        existingResidence = residenceRepository.save(residence);
+        existingResidence = residenceService.save(residence);
 
         return ResponseEntity.ok(existingResidence);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity deleteResidence(@PathVariable Integer id) {
-        residenceRepository.deleteById(id);
+        residenceService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
