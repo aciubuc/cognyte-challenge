@@ -40,7 +40,7 @@ CognyteChallengeApplicationTests.java
 ```
 The application is pretty trivial right now and I did not see any use for defining unit tests. Of course these can be defined once the application gets more complicated, more functionalities are added.
 ###### Frontend
-The front-end was created using create-react-app tool chain. It is a SPA (Single Page Application)
+The front-end was created using create-react-app tool. It is a SPA (Single Page Application)
 All the fontend files are under the 'fontend' folder in the [repository_directory].
 The main components are: `ResidenceForm`, `ResidencesList`, `MyHeatMap` and `AppNavBar` which should be pretty self explanatory.
 It uses various map APIs: leaflet, leaflet.heat, leaflet-geosearch
