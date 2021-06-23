@@ -43,7 +43,7 @@ The application is pretty trivial right now and I did not see any use for defini
 The front-end was created using create-react-app tool. It is a SPA (Single Page Application)
 All the fontend files are under the 'fontend' folder in the [repository_directory].
 The main components are: `ResidenceForm`, `ResidencesList`, `MyHeatMap` and `AppNavBar` which should be pretty self explanatory.
-It uses various map APIs: leaflet, leaflet.heat, leaflet-geosearch
+It uses various map APIs: leaflet, leaflet.heat, leaflet-geosearch.
 For dev purposes you’ll need to have Node on your local development machine (but it’s not required on the server)
 How to use the React app in development mode?
 
