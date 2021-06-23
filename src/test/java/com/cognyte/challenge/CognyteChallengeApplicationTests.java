@@ -1,12 +1,12 @@
 package com.cognyte.challenge;
 
 import com.cognyte.challenge.model.Residence;
+import com.cognyte.challenge.service.ResidenceService;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = CognyteChallengeApplication.class)
@@ -36,6 +37,8 @@ class CognyteChallengeApplicationTests {
     private MockMvc mvc;
     @Autowired
     private WebApplicationContext webApplicationContext;
+    @Autowired
+    private ResidenceService residenceService;
 
     private void setUp() {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
@@ -55,7 +58,7 @@ class CognyteChallengeApplicationTests {
     }
     @Test
     @DisplayName("Check create residence")
-    public void createResidence() throws Exception {
+    public void checkCreateResidence() throws Exception {
         String inputJson = mapToJson(brasovResidence);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/residences")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -66,6 +69,28 @@ class CognyteChallengeApplicationTests {
         String content = mvcResult.getResponse().getContentAsString();
         Residence residence = mapFromJson(content, Residence.class);
         assertEquals("500244", residence.getZipCode());
+    }
+
+    @Test
+    @DisplayName("Check delete residence")
+    public void checkDeleteResidence() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/residences/" + residenceService.save(brasovResidence).getId())).andReturn();
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(HttpStatus.OK.value(), status);
+    }
+
+    @Test
+    @DisplayName("Check get all residences")
+    public void checkGetAllResidences()
+            throws Exception {
+        residenceService.save(brasovResidence);
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/residences")
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(HttpStatus.OK.value(), status);
+        String content = mvcResult.getResponse().getContentAsString();
+        Residence[] residenceList = mapFromJson(content, Residence[].class);
+        assertTrue(residenceList.length > 0);
     }
 
     private <T> T mapFromJson(String json, Class<T> clazz)

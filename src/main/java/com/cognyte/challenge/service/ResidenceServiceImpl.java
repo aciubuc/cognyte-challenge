@@ -14,7 +14,7 @@ public class ResidenceServiceImpl implements ResidenceService {
     }
     @Override
     public List<Residence> findAll() {
-        return null;
+        return residenceRepository.findAll();
     }
 
     @Override

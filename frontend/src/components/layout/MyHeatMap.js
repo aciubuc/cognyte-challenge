@@ -28,7 +28,9 @@ export default function MyHeatMap() {
             .then(res => res.json())
             .then(residences => {
                 const initialMapCoords = getInitialMapCoords(residences);
-                var map = L.map("map").setView([initialMapCoords.latitude, initialMapCoords.longitude], 15);
+                let initialLatitude = isNaN(initialMapCoords.latitude) ? 45.6427 : initialMapCoords.latitude;
+                let initialLongitude = isNaN(initialMapCoords.longitude) ? 25.5887 : initialMapCoords.longitude;
+                var map = L.map("map").setView([initialLatitude, initialLongitude], 15);
 
                 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
                     attribution:
